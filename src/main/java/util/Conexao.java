@@ -8,7 +8,7 @@ public class Conexao {
 
     // Ajuste conforme seu banco
     private static final String URL =
-            "jdbc:postgresql://localhost:5432/sistema_mvc_web";
+            "jdbc:postgresql://localhost:5432/sistema_registro_web";
 
     private static final String USER = "postgres";
     private static final String PASSWORD = "senha";
