@@ -8,10 +8,10 @@ public class Conexao {
 
     // Ajuste conforme seu banco
     private static final String URL =
-            "jdbc:postgresql://localhost:5432/projeto_mvc_web";
+            "jdbc:postgresql://localhost:5432/sistema_mvc_web";
 
     private static final String USER = "postgres";
-    private static final String PASSWORD = "postgres";
+    private static final String PASSWORD = "senha";
 
 
     // Bloco estático: carrega o driver uma vez
