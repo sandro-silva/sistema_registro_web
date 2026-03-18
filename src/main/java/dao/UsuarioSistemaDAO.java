@@ -1,8 +1,8 @@
 package dao;
 
 import model.UsuarioSistema;
-import util.Conexao;
 import model.Perfil;
+import util.Conexao;
 
 import java.sql.*;
 import java.util.LinkedHashMap;
@@ -10,12 +10,14 @@ import java.util.Map;
 
 public class UsuarioSistemaDAO {
 
+    /* ================= LOGIN ================= */
     public UsuarioSistema autenticar(String login, String senha) {
 
-        String sql = "SELECT us.id, us.login, us.senha, p.nome AS perfil " +
-        	    "FROM usuarios_sistema us " +
-        	    "JOIN perfis p ON p.id = us.perfil_id " +
-        	    "WHERE us.login = ? AND us.senha = ?";
+        String sql =
+            "SELECT us.id, us.login, us.senha, p.nome AS perfil " +
+            "FROM usuarios_sistema us " +
+            "JOIN perfis p ON p.id = us.perfil_id " +
+            "WHERE us.login = ? AND us.senha = ?";
 
         try (
             Connection conn = Conexao.getConnection();
@@ -34,19 +36,25 @@ public class UsuarioSistemaDAO {
                 u.setId(rs.getLong("id"));
                 u.setLogin(rs.getString("login"));
                 u.setSenha(rs.getString("senha"));
-                u.setPerfil(Perfil.valueOf(rs.getString("perfil")));
+
+                // ✅ CONVERSÃO STRING → ENUM
+                String perfilBanco = rs.getString("perfil");
+
+                u.setPerfil(
+                    Perfil.valueOf(perfilBanco.toUpperCase())
+                );
 
                 return u;
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Erro ao autenticar", e);
         }
 
         return null;
     }
 
-    // 🔥 MÉTODO Contar por perfil
+    /* ================= RELATÓRIO ================= */
     public Map<String, Integer> contarPorPerfil() {
 
         Map<String, Integer> mapa = new LinkedHashMap<>();
@@ -73,7 +81,6 @@ public class UsuarioSistemaDAO {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
             throw new RuntimeException("Erro ao gerar relatório", e);
         }
 
