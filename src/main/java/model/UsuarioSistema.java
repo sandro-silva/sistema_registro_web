@@ -31,12 +31,11 @@ public class UsuarioSistema {
         this.senha = senha;
     }
 
-	public Perfil getPerfil() {
-		return perfil;
-	}
+    public Perfil getPerfil() {
+        return perfil;
+    }
 
-	public void setPerfil(Perfil perfil) {
-		this.perfil = perfil;
-	}
-    
+    public void setPerfil(Perfil perfil) {
+        this.perfil = perfil;
+    }
 }
