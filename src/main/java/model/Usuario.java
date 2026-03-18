@@ -1,12 +1,11 @@
 package model;
 
 public class Usuario {
-	private Long id;
-	private String nome;
-	private String cpf;
-	private boolean participou;
-	private String observacao;
-	private Long usuarioSistemaId;
+	   private Long id;
+	    private String nome;
+	    private String cpf;
+	    private String atividade;
+	    private String observacao;
 	
 	public Long getId() {
 		return id;
@@ -26,23 +25,17 @@ public class Usuario {
 	public void setCpf(String cpf) {
 		this.cpf = cpf;
 	}
-	public boolean isParticipou() {
-		return participou;
+	public String getAtividade() {
+		return atividade;
 	}
-	public void setParticipou(boolean participou) {
-		this.participou = participou;
+	public void setAtividade(String atividade) {
+		this.atividade = atividade;
 	}
 	public String getObservacao() {
 		return observacao;
 	}
 	public void setObservacao(String observacao) {
 		this.observacao = observacao;
-	}
-	public Long getUsuarioSistemaId() {
-		return usuarioSistemaId;
-	}
-	public void setUsuarioSistemaId(Long usuarioSistemaId) {
-		this.usuarioSistemaId = usuarioSistemaId;
 	}
 
 }
