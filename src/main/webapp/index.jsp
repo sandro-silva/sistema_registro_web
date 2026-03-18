@@ -81,7 +81,7 @@
 <body>
 
 <header>
-    <h1>📊 Sistema de Usuários</h1>
+    <h1>📊 Sistema de Registros</h1>
 </header>
 
 <div class="container">
