@@ -2,7 +2,6 @@ package controller;
 
 import dao.UsuarioDAO;
 import model.UsuarioSistema;
-import model.Perfil;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -25,7 +24,9 @@ public class DashboardServlet extends HttpServlet {
 
             HttpSession session = req.getSession(false);
 
-            if (session == null) {
+            if (session == null ||
+                session.getAttribute("usuarioLogado") == null) {
+
                 resp.sendRedirect("login.jsp");
                 return;
             }
@@ -33,31 +34,24 @@ public class DashboardServlet extends HttpServlet {
             UsuarioSistema usuarioLogado =
                     (UsuarioSistema) session.getAttribute("usuarioLogado");
 
-            int totalUsuarios;
+            // =============================
+            // TOTAL DE USUÁRIOS
+            // =============================
+            int totalUsuarios = dao.contarUsuarios();
 
-            // ⭐ ADMIN vê todos
-            if (usuarioLogado.getPerfil() == Perfil.ADMIN) {
-                totalUsuarios = dao.contarTodosUsuarios();
-            }
-            // ⭐ usuário comum vê apenas os dele
-            else {
-                totalUsuarios =
-                        dao.contarUsuarios(usuarioLogado.getId());
-            }
-
+            req.setAttribute("usuarioLogado", usuarioLogado);
             req.setAttribute("totalUsuarios", totalUsuarios);
 
             req.getRequestDispatcher("index.jsp")
-               .forward(req, resp);
+                    .forward(req, resp);
 
         } catch (Exception e) {
 
             e.printStackTrace();
 
             resp.sendError(
-                HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-                "Erro no dashboard"
-            );
+                    HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                    "Erro no dashboard");
         }
     }
 }
