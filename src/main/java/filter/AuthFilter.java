@@ -1,5 +1,6 @@
 package filter;
 
+import model.UsuarioSistema;
 import model.Perfil;
 
 import javax.servlet.*;
@@ -20,45 +21,66 @@ public class AuthFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse resp = (HttpServletResponse) response;
 
+        String contextPath = req.getContextPath();
         String uri = req.getRequestURI();
 
-        // 🔓 Páginas públicas
-        if (uri.contains("login") ||
-            uri.contains("css") ||
-            uri.contains("js")) {
+        // ===============================
+        // 🔓 RECURSOS PÚBLICOS
+        // ===============================
+        if (uri.endsWith("login") ||
+            uri.endsWith("login.jsp") ||
+            uri.contains("/css/") ||
+            uri.contains("/js/") ||
+            uri.contains("/images/") ||
+            uri.contains("favicon")) {
 
             chain.doFilter(request, response);
             return;
         }
 
+        // ===============================
+        // 🔐 VERIFICA LOGIN
+        // ===============================
         HttpSession session = req.getSession(false);
 
         if (session == null ||
             session.getAttribute("usuarioLogado") == null) {
 
-            resp.sendRedirect("login");
+            resp.sendRedirect(contextPath + "/login");
             return;
         }
 
-        Perfil perfil =
-            (Perfil) session.getAttribute("perfil");
+        // ===============================
+        // 🔐 OBTÉM USUÁRIO LOGADO
+        // ===============================
+        UsuarioSistema usuarioLogado =
+                (UsuarioSistema) session.getAttribute("usuarioLogado");
 
-        // 🔒 Apenas ADMIN pode acessar /usuarios
-        if (uri.contains("/usuario") &&
-            perfil != Perfil.ADMIN) {
+        Perfil perfil = usuarioLogado.getPerfil();
 
-            resp.sendRedirect("dashboard");
+        // ===============================
+        // 🔒 ÁREA ADMIN
+        // ===============================
+        if (uri.contains("/admin/")
+                && perfil != Perfil.ADMIN) {
+
+            resp.sendRedirect(contextPath + "/dashboard");
             return;
         }
-        
-        // 🔒 Apenas ADMIN pode acessar /relatorios
-        if (uri.contains("/relatorios") &&
-            perfil != Perfil.ADMIN) {
 
-            resp.sendRedirect("dashboard");
+        // ===============================
+        // 🔒 RELATÓRIOS (somente ADMIN)
+        // ===============================
+        if (uri.contains("/relatorios")
+                && perfil != Perfil.ADMIN) {
+
+            resp.sendRedirect(contextPath + "/dashboard");
             return;
         }
 
+        // ===============================
+        // ✅ LIBERA ACESSO
+        // ===============================
         chain.doFilter(request, response);
     }
 }
